@@ -1,0 +1,1 @@
+export { default as FavNumber } from './FavNumber';
