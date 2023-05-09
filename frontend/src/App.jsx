@@ -5,7 +5,7 @@ import Wallet from '../../backend/artifacts/contracts/FavoriteNumber.sol/Favorit
 import { Flex, Input, Text, Button, Heading, Alert, AlertIcon, useToast, Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { TbCurrencyEthereum } from "react-icons/tb"
 
-const WalletAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const WalletAddress = import.meta.env.VITE_REACT_APP_WALLET;
 
 import {Navbar} from './components'
 import {FavNumber} from './pages'
@@ -33,6 +33,24 @@ function App() {
         const data = await contract.getNumber();
         console.log("data" +data);
         setFavoriteNumberInBlockchain(data.toString());
+      }
+      catch(err) {
+        setError('There is an error.');
+      }
+    }
+  }
+  const getOwner  = async() => {
+    console.log("typeof window.ethereum " +typeof window.ethereum);
+    if(typeof window.ethereum !== 'undefined') {
+      //const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+      //const provider = new ethers.provider.Web3Provider(window.ethereum);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(WalletAddress, Wallet.abi, provider);
+      try {
+        
+        //const data = await contract.getNumber(overrides);
+        const data = await contract.getOwner();
+        console.log("owner is: " +data);
       }
       catch(err) {
         setError('There is an error.');
@@ -100,6 +118,9 @@ function App() {
   }
   return (
     <div className="App">
+      <Flex>
+        <Button onClick={() => getOwner()}>getOwner</Button>
+      </Flex>
       <Flex
         height='15vh'
             p="2rem"
