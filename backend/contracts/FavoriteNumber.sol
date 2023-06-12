@@ -8,8 +8,9 @@ pragma solidity ^0.8.18;
 // Import ownable from OpenZeppelin contracts
 //import "@openzeppelin/contracts-ethereum-package/contracts/ownership/Ownable.sol";
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract FavoriteNumber {
+contract FavoriteNumber is Ownable {
     
     uint private myNumber ;
     // function initialize(address sender) public initializer {
@@ -19,7 +20,7 @@ contract FavoriteNumber {
     //    myNumber = _x;
     //}
 
-    function setNumber(uint _x) external  {
+    function setNumber(uint _x) external onlyOwner  {
         myNumber = _x;
     }
 
@@ -27,9 +28,7 @@ contract FavoriteNumber {
 
         return myNumber;
     }
-    function getOwner() external view returns (address) {
-        return msg.sender;
-    }
+    
     receive() external payable {
        // Wallets[msg.sender] += msg.value;
     }

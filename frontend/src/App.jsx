@@ -1,9 +1,9 @@
 import React ,{useState ,useEffect} from 'react';
 import { Route, Routes} from 'react-router-dom';
 import { ethers } from "ethers";
-import Wallet from '../../backend/artifacts/contracts/FavoriteNumber.sol/FavoriteNumber.json'
 import { Flex, Input, Text, Button, Heading, Alert, AlertIcon, useToast, Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { TbCurrencyEthereum } from "react-icons/tb"
+import { CONTRACT_ABI } from './constant/constant';
 
 const WalletAddress = import.meta.env.VITE_REACT_APP_WALLET;
 
@@ -26,7 +26,7 @@ function App() {
       //const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
       //const provider = new ethers.provider.Web3Provider(window.ethereum);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(WalletAddress, Wallet.abi, provider);
+      const contract = new ethers.Contract(WalletAddress, CONTRACT_ABI, provider);
       try {
         
         //const data = await contract.getNumber(overrides);
@@ -39,24 +39,7 @@ function App() {
       }
     }
   }
-  const getOwner  = async() => {
-    console.log("typeof window.ethereum " +typeof window.ethereum);
-    if(typeof window.ethereum !== 'undefined') {
-      //const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
-      //const provider = new ethers.provider.Web3Provider(window.ethereum);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(WalletAddress, Wallet.abi, provider);
-      try {
-        
-        //const data = await contract.getNumber(overrides);
-        const data = await contract.getOwner();
-        console.log("owner is: " +data);
-      }
-      catch(err) {
-        setError('There is an error.');
-      }
-    }
-  }
+
 
   const changeFavoriteNumber = async() => {
     console.log("amount send " + favoriteNumberInput);
@@ -71,7 +54,7 @@ function App() {
     try {
         //const contract = new ethers.Contract("0x5FbDB2315678afecb367f032d93F642f64180aa3", Contract.abi, signer)
        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-       const contract = new ethers.Contract(WalletAddress, Wallet.abi, signer);
+       const contract = new ethers.Contract(WalletAddress, CONTRACT_ABI, signer);
        
         let transaction = await contract.setNumber(favoriteNumberInput);
         await transaction.wait(1);
@@ -118,9 +101,7 @@ function App() {
   }
   return (
     <div className="App">
-      <Flex>
-        <Button onClick={() => getOwner()}>getOwner</Button>
-      </Flex>
+     
       <Flex
         height='15vh'
             p="2rem"
@@ -154,8 +135,8 @@ function App() {
                     <Card p="2rem" mt="2rem">
                         <CardBody>
                             <Heading as='h2' size='xl' align="center">Change your favorite number in the Blockchain</Heading>
-                            <Input mt="1rem" placeholder="Your favorite number" onChange={(e) => setFavoriteNumberInput(e.target.value)} />
-                            <Button   width="100%" mt="1rem" colorScheme="teal" onClick={() => changeFavoriteNumber()} value={favoriteNumberInput}>Change</Button>
+                            <Input size="sm" mt="1rem" placeholder="Your favorite number" onChange={(e) => setFavoriteNumberInput(e.target.value)} />
+                            <Button  size="sm" width="100%" mt="1rem" colorScheme="teal" onClick={() => changeFavoriteNumber()} value={favoriteNumberInput}>Change</Button>
                         </CardBody>
                     </Card>
                 </Flex>
